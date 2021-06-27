@@ -10,17 +10,26 @@ const checkButtons = document.querySelectorAll(".actions a.check")
 
 checkButtons.forEach(button => {
     button.addEventListener("click", handleClick)
-}
+})
 
 const deleteButton = document.querySelectorAll(".actions a.delete")
 deleteButton.forEach(button => {
-  button.addEventListener("click", handleClick(event, false))
-  }
+  button.addEventListener("click", (event) => handleClick(event, false))
+  })
 
 function handleClick(event, check = true){
-  const text = check ? "Marcar como lido" : "Excluir essa pergunta"
-  modalTitle.innerHTML = `${text}esta pergunta`
-  modalDescription.innerHTML = check ? "Tem certeza que deseja essta pergunta" : "Tem certeza que deseja excluir essa pergunta"
-  
-  modal.open()
-}
+  event.preventDefault()
+  const text = check ? "Marcar como lida" : "Excluir"
+  const slug = check ? "check" : "delete"
+  const roomId = document.querySelector("#room-id").dataset.id
+  const questionId = event.target.dataset.id
+
+  const form = document.querySelector(".modal form")
+  form.setAttribute("action", `/room/${roomId}/${questionId}/${slug}`)
+ 
+  modalTitle.innerHTML = `${text} esta pergunta`
+  modalDescription.innerHTML = `Tem certeza que deseja ${text.toLowerCase()} esta pergunta?`
+  modalButton.innerHTML = `Sim, ${text.toLowerCase()}`
+  check ? modalButton.classList.remove("red") : modalButton.classList.add("red")
+
+  modal.open()}
